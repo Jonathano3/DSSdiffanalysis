@@ -13,17 +13,20 @@ SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    libfreetype6-dev \
-    libfontconfig1-dev \
+    libcurl4-openssl-dev \
     libxml2-dev \
     libssl-dev \
-    libcurl4-openssl-dev \
-    libharfbuzz-dev \
-    libfribidi-dev \
+    libfontconfig1-dev \
+    libfreetype6-dev \
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
-    && rm -rf /var/lib/apt/lists/*
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libglu1-mesa-dev \
+    libxt-dev \
+    zlib1g-dev \
+    && apt-get clean
 
 # Install R packages
 RUN source activate ENV_DSSdiffanalysis_data_formating && \
