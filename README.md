@@ -1,16 +1,36 @@
 # Differential analysis with DSS
 <p align="center"> 
-    <img src="logo/UT3.png" width="300" style="margin: 30px;">
+    <img src="logo/UT3.jpg" width="300" style="margin: 30px;">
     <img src="logo/INRAE.png" width="300" style="margin: 30px;">
     <img src="logo/geronimo.png" width="300" style="margin: 30px;">
     <img src="logo/genphyse.png" width="300" style="margin: 30px;">
 </p>
 
+## 1. Setup your environnent
+**first download docker**
+  
+*if you use linux*
+```sh
+#only if you don t have already curl
+sudo apt-get update
+sudo apt-get install curl
+#get docker
+curl -fsSL https://get.docker.com/ | sh
+```
+*if you use windows click on the link [get docker](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-win-amd64)*
 
-## Pipeline for data processing
+**dowload the docker image to obtain all software and packages for analysis (our you can creat it by your own by clicking on [tuto env](docker/README.md)**
+```sh
+docker pull jchalaye/dss:analysis
+```
+**run the container and change the path to your working directory**
+```sh
+docker run -it --rm -v "path/to/your/working/directory:/work" dss:analysis
+```
+## 2. Pipeline for data processing
 **Go in your work directory**
 ```sh
-cd /work/project/geronimo/WP1/Jonathan/final
+cd path/to/your/working/directory
 ```
 **Copy the pipeline**
 ```sh
@@ -111,7 +131,7 @@ cd nextflow_pipeline
 sbatch run_pipeline.sh
 ```
 
-## Data formating and statistics
+## 3. Data formating and statistics
 
 **go to working directory**
 ```sh
@@ -120,7 +140,7 @@ cd /work/project/geronimo/WP1/Jonathan/final
 
 **creat directory of interest**
 ```sh
-mkdir data depth variant
+mkdir data depth variant DSS
 ```
 
 **copy all scripts to your working directory**
@@ -128,7 +148,7 @@ mkdir data depth variant
 git clone https://github.com/Jonathano3/DSSdiffanalysis
 ```
 
-**run this [bash script](script/data_formating/stat_unique_CpG.sh) to collect statistics on unique CpGs during the process**
+**run ["stat_unique_CpG.sh"](script/data_formating/stat_unique_CpG.sh) to collect statistics on unique CpGs during the process**
 ```sh
 sbatch /work/project/geronimo/WP1/Jonathan/final/DSSdiffanalysis/script/data_formating/stat_unique_CpG.sh
 ```
@@ -167,7 +187,7 @@ sbatch --wrap="python ${dir_out}/script/count_unique_CpG.py ${dir_in}/bed_proces
 sbatch --wrap="python ${dir_out}/script/count_unique_CpG.py ${dir_out}/bed_processed > ${dir_out}/count/count_lcpg"
 ```
 
-**run the filter for a low number of CpGs per sample by executing this [bash script](script/data_formating/filter_low_CpG.sh)**
+**run the filter for a low number of CpGs per sample by executing this script ["filter_low_CpG.sh"](script/data_formating/filter_low_CpG.sh)**
 ```sh
 sbatch /work/project/geronimo/WP1/Jonathan/final/DSSdiffanalysis/script/data_formating/filter_low_CpG.sh
 ```
@@ -206,7 +226,7 @@ compteur=$((compteur + count))
 done
 echo "Nombre total de lignes avec un ecart de 1 : $compteur"
 ```
-**run this [bash script](script/data_formating/filter_low_CpG.sh) to obtain a list of variants by BISCUIT**
+**run this script ["variants_list.sh"](script/data_formating/variants_list.sh) to obtain a list of variants collected by BISCUIT**
 ```sh
 sbatch /work/project/geronimo/WP1/Jonathan/final/DSSdiffanalysis/script/data_formating/variants_list.sh
 ```
@@ -261,7 +281,7 @@ bcftools stats merged_filter.vcf.gz > merged_filter.stats
 bcftools query -H -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\n' merged_filter.vcf.gz > ${final}/snp_chicken_biscuit.txt
 bzip2 ${final}/snp_chicken_biscuit.txt
 ```
-**run this [bash script](script/data_formating/run.sh) to run this [r script](script/data_formating/filter.r) to obtain a list of variants by BISCUIT**
+**this script ["filter.r"](script/data_formating/filter.r) is used to create your final list of CpGs filtered with variants and missing values and obtain statistics**
 ```sh
 sbatch /work/project/geronimo/WP1/Jonathan/final/DSSdiffanalysis/script/data_formating/run.sh
 ```
