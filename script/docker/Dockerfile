@@ -29,13 +29,12 @@ RUN apt-get update && apt-get install -y \
 # Install required R packages
 RUN R -e "install.packages('BiocManager', ask = FALSE, repos='https://cloud.r-project.org/')" && \
     R -e "BiocManager::install(version = '3.20')" && \
-    R -e "BiocManager::install(c('reshape2', 'data.table', 'tidyverse', 'readxl', 'ggplot2'))" && \
     R -e "BiocManager::install(c('GenomicRanges', 'AnnotationDbi', 'rtracklayer', 'biomaRt', 'DSS', 'clusterProfiler'))" && \
-    R -e "install.packages('data.table', version = '1.17.0')" && \
-    R -e "install.packages('ggplot2', version = '3.5.2')" && \
-    R -e "install.packages('tidyverse', version = '2.0.0')" && \
-    R -e "install.packages('readxl', version = '1.4.5')" && \
-    R -e "install.packages('reshape2', version = '1.4.4')"
+    R -e "install.packages('data.table', version = '1.17.0', repos = c(CRAN='https://cloud.r-project.org/'))" && \
+    R -e "install.packages('ggplot2', version = '3.5.2', repos = c(CRAN='https://cloud.r-project.org/'))" && \
+    R -e "install.packages('tidyverse', version = '2.0.0', repos = c(CRAN='https://cloud.r-project.org/'))" && \
+    R -e "install.packages('readxl', version = '1.4.5', repos = c(CRAN='https://cloud.r-project.org/'))" && \
+    R -e "install.packages('reshape2', version = '1.4.4', repos = c(CRAN='https://cloud.r-project.org/'))"
 
 # Set the working directory
 WORKDIR /work
