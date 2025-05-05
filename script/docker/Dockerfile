@@ -1,17 +1,15 @@
 #source image
 FROM continuumio/miniconda3
 
+# Copy the environment.yaml file and create the conda environment
 COPY environment.yaml /tmp/environment.yml
-
-# Create a new conda environment with the specified software
 RUN conda env create -f /tmp/environment.yml
-# Use the new environment as the default
 RUN echo "conda activate ENV_DSSdiffanalysis_data_formating" >> ~/.bashrc
 
-# Use bash as the default shell
-SHELL ["/bin/bash", "-c"]
+# Activate the Conda environment each time a command is run
+SHELL ["conda", "run", "-n", "ENV_DSSdiffanalysis_data_formating", "/bin/bash", "-c"]
 
-# Install dependencies
+# Install system dependencies required for R packages
 RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libxml2-dev \
@@ -25,18 +23,22 @@ RUN apt-get update && apt-get install -y \
     libfribidi-dev \
     libglu1-mesa-dev \
     libxt-dev \
-    zlib1g-dev \
-    && apt-get clean
+    zlib1g-dev && \
+    apt-get clean
 
-# Install R packages
-RUN source activate ENV_DSSdiffanalysis_data_formating && \
-    R -e "install.packages('BiocManager', ask = FALSE, repos='https://cloud.r-project.org/')" && \
+# Install required R packages
+RUN R -e "install.packages('BiocManager', ask = FALSE, repos='https://cloud.r-project.org/')" && \
     R -e "BiocManager::install(version = '3.20')" && \
     R -e "BiocManager::install(c('reshape2', 'data.table', 'tidyverse', 'readxl', 'ggplot2'))" && \
-    R -e "BiocManager::install(c('GenomicRanges', 'AnnotationDbi', 'rtracklayer', 'biomaRt', 'DSS', 'clusterProfiler'))"
+    R -e "BiocManager::install(c('GenomicRanges', 'AnnotationDbi', 'rtracklayer', 'biomaRt', 'DSS', 'clusterProfiler'))" && \
+    R -e "install.packages('data.table', version = '1.17.0')" && \
+    R -e "install.packages('ggplot2', version = '3.5.2')" && \
+    R -e "install.packages('tidyverse', version = '2.0.0')" && \
+    R -e "install.packages('readxl', version = '1.4.5')" && \
+    R -e "install.packages('reshape2', version = '1.4.4')"
 
-#set the working directory
+# Set the working directory
 WORKDIR /work
 
-# set the entrypoint to bash
+# Set the default entry point to bash shell
 ENTRYPOINT ["/bin/bash"]

@@ -1,14 +1,17 @@
 name: ENV_DSSdiffanalysis_data_formating
+channel_priority: strict
 channels:
   - conda-forge
   - bioconda
+  - defaults
 dependencies:
   - python=3.9.18
   - r-base=4.4.0
+  - r-curl=6.2.2
   - samtools=1.20
   - bedtools=2.30.0
   - deeptools=3.5.2
   - biscuit=1.4.0
-  - Bcftools=1.21
-  - PLINK=2.00a4
-  - VCFtools=0.1.16
+  - bcftools=1.21
+  - plink2=2.0.0a.6.9
+  - vcftools=0.1.16
