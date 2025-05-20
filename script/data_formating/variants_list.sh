@@ -1,12 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=variant_list
-
-module load bioinfo/Bcftools/1.21
-module load bioinfo/PLINK/2.00a4
-module load bioinfo/VCFtools/0.1.16
-dir_in=/work/project/geronimo/WP1/Jonathan/final
-dir_out=/work/project/geronimo/WP1/Jonathan/final/variant
-final=/work/project/geronimo/WP1/Jonathan/final/data
+dir_in=path/to/your/working/directory
+dir_out=path/to/your/working/directory/variant
+final=path/to/your/working/directory/data
 
 #extraction of samples of interest
 samples=($(ls ${dir_in}/vcf_processed/*.vcf.gz))

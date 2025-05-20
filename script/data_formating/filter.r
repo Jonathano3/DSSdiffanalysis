@@ -5,10 +5,10 @@ library(tidyverse)
 library(reshape2)
 
 #load metadata
-data <- read_excel("/work/project/geronimo/data/azenta/metadata/WP1_blood_novo_1149hens.xlsx")
+data <- read_excel("path/to/your/working/directory/data/WP1_blood_novo_1149hens.xlsx")
 
 #get all file paths
-lf=list.files(path='/work/project/geronimo/WP1/Jonathan/final/bed_processed/',pattern='bed.gz')
+lf=list.files(path='path/to/your/working/directory/bed_processed/',pattern='bed.gz')
 n<-grep('tbi',lf)
 lf<-lf[-n]
 
@@ -18,7 +18,7 @@ DF <- list()
 dmax <- list()
 for(i in lf){
   print(i)
-  df <- fread(paste0('/work/project/geronimo/WP1/Jonathan/final/bed_processed/', i))
+  df <- fread(paste0('path/to/your/working/directory/bed_processed/', i))
   colnames(df) <- c('chr', 'start', 'stop', 'meth', 'depth', 'info')
   df$rs <- paste0(df$chr, ':', df$start, '_', df$stop)
 
@@ -56,8 +56,8 @@ DF_depth<- merge(DF_depth_1, DF_depth_2, by = "rs", all = TRUE)
 
 ### Variant filter
 #load varaint files
-snp1<-fread('/work/project/geronimo/WP1/Jonathan/final/data/snp_chicken_biscuit.txt')
-snp2<-fread('/work/project/geronimo/data/azenta/metadata/snp_chicken_novo.txt.gz')
+snp1<-fread('path/to/your/working/directory/data/snp_chicken_biscuit.txt')
+snp2<-fread('path/to/your/working/directory/data/snp_chicken_novo.txt.gz')
 colnames(snp1)<-c('chr','pos','rs','ref','alt')
 colnames(snp2)<-c('chr','pos','rs','ref','alt')
 snp<-rbind(snp1,snp2)
@@ -111,9 +111,9 @@ writeLines(statistiques, "/work/project/geronimo/WP1/Jonathan/final/data/statist
 #write list CpGs of interest
 list_cpg<-DF_sub2_depth[,c('chr','pos')]
 list_cpg$end<-DF_sub2_depth$pos+1
-fwrite(list_cpg,'/work/project/geronimo/WP1/Jonathan/final/data/list_cpg_final_sb2.txt',col.names=F,row.names=F,quote=F)
+fwrite(list_cpg,'path/to/your/working/directory/data/list_cpg_final_sb2.txt',col.names=F,row.names=F,quote=F)
 
 #save filter steps (depth)
-fwrite(DF_depth,'/work/project/geronimo/WP1/Jonathan/final/depth/DF_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
-fwrite(DF_sub_depth,'/work/project/geronimo/WP1/Jonathan/final/depth/DF_sub_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
-fwrite(DF_sub2_depth,'/work/project/geronimo/WP1/Jonathan/final/depth/DF_sub2_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
+fwrite(DF_depth,'path/to/your/working/directory/depth/DF_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
+fwrite(DF_sub_depth,'path/to/your/working/directory/depth/DF_sub_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
+fwrite(DF_sub2_depth,'path/to/your/working/directory/depth/DF_sub2_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")

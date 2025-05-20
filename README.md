@@ -142,7 +142,7 @@ sbatch run_pipeline.sh
 
 **go to working directory**
 ```sh
-cd /work/project/geronimo/WP1/Jonathan/final
+cd path/to/your/working/directory
 ```
 
 **creat directory of interest**
@@ -157,19 +157,14 @@ git clone https://github.com/Jonathano3/DSSdiffanalysis
 
 **run ["stat_unique_CpG.sh"](script/data_formating/stat_unique_CpG.sh) to collect statistics on unique CpGs during the process**
 ```sh
-sbatch /work/project/geronimo/WP1/Jonathan/final/DSSdiffanalysis/script/data_formating/stat_unique_CpG.sh
+. path/to/your/working/directory/DSSdiffanalysis/script/data_formating/stat_unique_CpG.sh
 ```
 *visualisation of the running script : ***stat_unique_CpG.sh***.*
 ```sh
-dir_in=/work/project/geronimo/data/azenta/WP1_chicken_blood_novo
-dir_out=/work/project/geronimo/WP1/Jonathan/final
-fasta=/work/project/geronimo/data/azenta/fasta/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.dna.toplevel.fa
-module load devel/python/Python-3.9.18
-module load bioinfo/deepTools/3.5.2
-module load bioinfo/samtools/1.20
-module load bioinfo/bedtools/2.30.0
-module load devel/Miniconda/Miniconda3
-module load bioinfo/BISCUIT/1.4.0
+dir_in=path/to/your/working/directory/data
+script=path/to/your/working/directory/DSSdiffanalysis/script
+dir_out=path/to/your/working/directory
+fasta=path/to/your/working/directory/data/fasta/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.dna.toplevel.fa
 
 # count CpG unique before filters (1. merge strands, 2. check for unique positions)
 #1
@@ -181,27 +176,28 @@ for i in ${lf[@]}
 do
 name=$(echo ${i} | rev | cut -d'/' -f1 | rev | cut -d'.' -f1)
 echo $i
-sbatch --mem=20G --wrap="biscuit mergecg ${fasta} ${i} > ${dir_out}/bed_merged/${name}_merged.bed; gzip ${dir_out}/bed_merged/${name}_merged.bed"
+biscuit mergecg ${fasta} ${i} > ${dir_out}/bed_merged/${name}_merged.bed; gzip ${dir_out}/bed_merged/${name}_merged.bed
 done
 
 #2
-sbatch --wrap="python ${dir_out}/script/count_unique_CpG.py ${dir_out}/bed_merged  > ${dir_out}/count/count_merged.txt"
+python ${script}/count_unique_CpG.py ${dir_out}/bed_merged  > ${dir_out}/count/count_merged.txt
 
 # check for unique positions after filter on min depth 10
-sbatch --wrap="python ${dir_out}/script/count_unique_CpG.py ${dir_in}/bed_processed > ${dir_out}/count/count_min.txt"
+python ${script}/count_unique_CpG.py ${dir_in}/bed_processed > ${dir_out}/count/count_min.txt
 
 # check for unique positions after removed low CpG in samples
-sbatch --wrap="python ${dir_out}/script/count_unique_CpG.py ${dir_out}/bed_processed > ${dir_out}/count/count_lcpg"
+python ${script}/count_unique_CpG.py ${dir_out}/bed_processed > ${dir_out}/count/count_lcpg
 ```
 
 **run the filter for a low number of CpGs per sample by executing this script ["filter_low_CpG.sh"](script/data_formating/filter_low_CpG.sh)**
 ```sh
-sbatch /work/project/geronimo/WP1/Jonathan/final/DSSdiffanalysis/script/data_formating/filter_low_CpG.sh
+. path/to/your/working/directory/DSSdiffanalysis/script/data_formating/filter_low_CpG.sh
 ```
 *visualisation of the running script : ***filter_low_CpG.sh***.*
 ```sh
 # removed bed_processed with low CpG count
 seuil=200000
+dir_out=path/to/your/working/directory
 mkdir ${dir_out}/bed_processed/samples_low_CpG ${dir_out}/bed_merged/samples_low_CpG
 
 
@@ -235,16 +231,13 @@ echo "Nombre total de lignes avec un ecart de 1 : $compteur"
 ```
 **run this script ["variants_list.sh"](script/data_formating/variants_list.sh) to obtain a list of variants collected by BISCUIT**
 ```sh
-sbatch /work/project/geronimo/WP1/Jonathan/final/DSSdiffanalysis/script/data_formating/variants_list.sh
+. path/to/your/working/directory/DSSdiffanalysis/script/data_formating/variants_list.sh
 ```
 *visualisation of the running script : ***variants_list.sh***.*
 ```sh
-module load bioinfo/Bcftools/1.21
-module load bioinfo/PLINK/2.00a4
-module load bioinfo/VCFtools/0.1.16
-dir_in=/work/project/geronimo/WP1/Jonathan/final
-dir_out=/work/project/geronimo/WP1/Jonathan/final/variant
-final=/work/project/geronimo/WP1/Jonathan/final/data
+dir_in=path/to/your/working/directory
+dir_out=path/to/your/working/directory/variant
+final=path/to/your/working/directory/data
 
 #extraction of samples of interest
 samples=($(ls ${dir_in}/vcf_processed/*.vcf.gz))
@@ -290,7 +283,7 @@ bzip2 ${final}/snp_chicken_biscuit.txt
 ```
 **this script ["filter.r"](script/data_formating/filter.r) is used to create your final list of CpGs filtered with variants and missing values and obtain statistics**
 ```sh
-sbatch /work/project/geronimo/WP1/Jonathan/final/DSSdiffanalysis/script/data_formating/run.sh
+Rscript path/to/your/working/directory/DSSdiffanalysis/script/data_formating/filter.r
 ```
 *visualisation of the running script : ***filter.r***.*
 ```sh
@@ -301,10 +294,10 @@ library(tidyverse)
 library(reshape2)
 
 #load metadata
-data <- read_excel("/work/project/geronimo/data/azenta/metadata/WP1_blood_novo_1149hens.xlsx")
+data <- read_excel("path/to/your/working/directory/data/WP1_blood_novo_1149hens.xlsx")
 
 #get all file paths
-lf=list.files(path='/work/project/geronimo/WP1/Jonathan/final/bed_processed/',pattern='bed.gz')
+lf=list.files(path='path/to/your/working/directory/bed_processed/',pattern='bed.gz')
 n<-grep('tbi',lf)
 lf<-lf[-n]
 
@@ -314,7 +307,7 @@ DF <- list()
 dmax <- list()
 for(i in lf){
   print(i)
-  df <- fread(paste0('/work/project/geronimo/WP1/Jonathan/final/bed_processed/', i))
+  df <- fread(paste0('path/to/your/working/directory/bed_processed/', i))
   colnames(df) <- c('chr', 'start', 'stop', 'meth', 'depth', 'info')
   df$rs <- paste0(df$chr, ':', df$start, '_', df$stop)
 
@@ -352,8 +345,8 @@ DF_depth<- merge(DF_depth_1, DF_depth_2, by = "rs", all = TRUE)
 
 ### Variant filter
 #load varaint files
-snp1<-fread('/work/project/geronimo/WP1/Jonathan/final/data/snp_chicken_biscuit.txt')
-snp2<-fread('/work/project/geronimo/data/azenta/metadata/snp_chicken_novo.txt.gz')
+snp1<-fread('path/to/your/working/directory/data/snp_chicken_biscuit.txt')
+snp2<-fread('path/to/your/working/directory/data/snp_chicken_novo.txt.gz')
 colnames(snp1)<-c('chr','pos','rs','ref','alt')
 colnames(snp2)<-c('chr','pos','rs','ref','alt')
 snp<-rbind(snp1,snp2)
@@ -402,21 +395,21 @@ statistiques <- c(
 )
 
 #write statistics
-writeLines(statistiques, "/work/project/geronimo/WP1/Jonathan/final/data/statistiques_depth.txt")
+writeLines(statistiques, "path/to/your/working/directory/data/statistiques_depth.txt")
 
 #write list CpGs of interest
 list_cpg<-DF_sub2_depth[,c('chr','pos')]
 list_cpg$end<-DF_sub2_depth$pos+1
-fwrite(list_cpg,'/work/project/geronimo/WP1/Jonathan/final/data/list_cpg_final_sb2.txt',col.names=F,row.names=F,quote=F)
+fwrite(list_cpg,'path/to/your/working/directory/data/list_cpg_final_sb2.txt',col.names=F,row.names=F,quote=F)
 
 #save filter steps (depth)
-fwrite(DF_depth,'/work/project/geronimo/WP1/Jonathan/final/depth/DF_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
-fwrite(DF_sub_depth,'/work/project/geronimo/WP1/Jonathan/final/depth/DF_sub_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
-fwrite(DF_sub2_depth,'/work/project/geronimo/WP1/Jonathan/final/depth/DF_sub2_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
+fwrite(DF_depth,'path/to/your/working/directory/depth/DF_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
+fwrite(DF_sub_depth,'path/to/your/working/directory/depth/DF_sub_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
+fwrite(DF_sub2_depth,'path/to/your/working/directory/depth/DF_sub2_depth.txt',col.names=T,row.names=F,quote=F, sep = "\t")
 ```
 **this script ["create_table.r"](script/data_formating/create_table.r) is used to create your final data table (methylation and depth) merged with all the CpGs found.**
 ```sh
-R path/to/your/working/directory/DSSdiffanalysis/script/data_formating/create_table.r
+Rscript path/to/your/working/directory/DSSdiffanalysis/script/data_formating/create_table.r
 ```
 *visualisation of the running script : ***create_table.r***.*
 ```sh
@@ -426,10 +419,10 @@ library(tidyverse)
 library(reshape2)
 
 #load your metadata
-data <- read_excel("/work/project/geronimo/data/azenta/metadata/WP1_blood_novo_1149hens.xlsx")
+data <- read_excel("path/to/your/working/directory/data/WP1_blood_novo_1149hens.xlsx")
 
 #collect path
-lf=list.files(path='/work/project/geronimo/WP1/Jonathan/final/bed_merged/',pattern='bed.gz')
+lf=list.files(path='path/to/your/working/directory/bed_merged/',pattern='bed.gz')
 CpG <- fread("/work/project/geronimo/WP1/Jonathan/final/data/list_cpg_final_sb2.txt", sep=",")
 colnames(CpG) <- c('chr', 'start', 'stop')
 
@@ -437,7 +430,7 @@ colnames(CpG) <- c('chr', 'start', 'stop')
 DF <- list()
 for (i in lf) {
     print(i)
-    df <- fread(paste0('/work/project/geronimo/WP1/Jonathan/final/bed_merged/', i))
+    df <- fread(paste0('path/to/your/working/directory/bed_merged/', i))
 
 
     colnames(df) <- c('chr', 'start', 'stop', 'meth', 'depth', 'info')
@@ -461,7 +454,7 @@ DF_meth<-spread(DF[,c('rs','meth','ind')],ind,meth)
 DF_depth<-spread(DF[,c('rs','depth','ind')],ind,depth)
 
 #save files
-fwrite(DF_meth,'/work/project/geronimo/WP1/Jonathan/final/data/all_meth_final_unique_CpG_sb2.txt',col.names=T,row.names=F,quote=F, sep = "\t")
-fwrite(DF_depth,'/work/project/geronimo/WP1/Jonathan/final/data/all_depth_final_unique_CpG_sb2.txt',col.names=T,row.names=F,quote=F, sep = "\t")
+fwrite(DF_meth,'path/to/your/working/directory/data/all_meth_final_unique_CpG_sb2.txt',col.names=T,row.names=F,quote=F, sep = "\t")
+fwrite(DF_depth,'path/to/your/working/directory/data/all_depth_final_unique_CpG_sb2.txt',col.names=T,row.names=F,quote=F, sep = "\t")
 ```
 ## 4. Differential analysis

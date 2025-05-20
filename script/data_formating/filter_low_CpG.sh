@@ -3,6 +3,7 @@
 
 # removed bed_processed with low CpG count
 seuil=200000
+dir_out=path/to/your/working/directory
 mkdir ${dir_out}/bed_processed/samples_low_CpG ${dir_out}/bed_merged/samples_low_CpG
 
 
