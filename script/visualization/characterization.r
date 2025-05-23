@@ -60,10 +60,17 @@ features_overlaps <- suppressWarnings(
 # === Plot distribution of CpGs across genome features ===
 df <- data.frame(feature=rep(c('promoter','UTR5','UTR3','exons','introns','other'),2),
                  type=c(rep('Final',6),rep('Theoretical',6)),
-                 percent=c(30.796,6.962,1.622,21.453,38.442,0.725,12.613,2.421,2.489,15.332,64.545,2.600))
+                 percent=c(31.7,7.2,1.5,20.7,38.2,0.7,12.6,2.4,2.5,15.3,64.5,2.6))
 df$type <- factor(df$type,levels=c('Theoretical','Final'))
 df$feature <- factor(df$feature,levels=c('promoter','UTR5','UTR3','exons','introns','other'))
 df <- df[order(df$type,rev(df$feature)),]
+
+png('/work/project/geronimo/WP1/Jonathan/final/plot/perc_features_sb2.png',width=1000,height=1500,res=200)
+ggplot(df)+
+	geom_bar(aes(x=type,y=percent,fill=feature),position='stack',stat='identity')+
+	theme_bw()+
+	geom_text(aes(x=type,y=percent,label=round(percent,digit=2)),position="stack",vjust=+1.1,size=4)	
+dev.off()
 
 # === Annotate CpGs with CpG island context ===
 cpg_file <- "/work/project/geronimo/fasta/ggal7_cpgIsland.bed.gz"
