@@ -36,7 +36,7 @@ Visualization of some statistics after the pipeline with the script : **[View_fi
 </p>  
   
 ## Data characterization
-Now that our data is clean, we can study it further with this script : **[characterization.r](../script/visualization/characterization.r)**
+Now that our data is clean, we can study it in more detail with this script: **[characterization.r](../script/visualization/characterization.r)**
 
 <p align="center">
   <img src="../figure/characterization/perc_features2_sb2.png" width="32%" style="display: inline-block; margin: 0;">
@@ -49,3 +49,16 @@ Now that our data is clean, we can study it further with this script : **[charac
 </p>
 
 ## DSS analysis
+Once you have obtained your DMLs, you can visualize them and their annotation with this script: **[DSS.r](../script/visualization/DSS_visualization.r)**
+
+<p align="center">
+  <img src="../figure/DSS/man_70_main_sign_meth.png" width="32%" style="display: inline-block; margin: 0;">
+  <img src="../figure/DSS/man_90_main_sign_meth.png" width="32%" style="display: inline-block; margin: 0;">
+</p> 
+<p align="center">
+  <img src="../figure/DSS/man_interaction_cage_sign.png" width="64%" style="display: inline-block; margin: 0;">
+</p> 
+<p align="center">
+  <img src="../figure/DSS/final_dotplot_hyper_p.png" width="32%" style="display: inline-block; margin: 0;">
+  <img src="../figure/DSS/final_network_hypo_p.png" width="32%" style="display: inline-block; margin: 0;">
+</p> 
