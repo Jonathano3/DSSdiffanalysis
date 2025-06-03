@@ -74,14 +74,52 @@ make_manhattan <- function(df, fdr_col, sens_col, output_path, title = "") {
 }
 
 # 6. Generate Manhattan plots
-make_manhattan(don, "fdr_cage", "sens_cage", ".../man_interaction_cage_sign.png")
-make_manhattan(don, "fdr_w", "sens_w", ".../man_interaction_w_sign.png")
-make_manhattan(don, "fdr_interaction", "sens_interaction", ".../man_interaction_interaction_sign.png")
-make_manhattan(don, "fdr_cage_70", "sens_cage_70", ".../man_interaction_cage_70_sign.png")
-make_manhattan(don, "fdr_cage_90", "sens_cage_90", ".../man_interaction_cage_90_sign.png")
+make_manhattan(don, "fdr_cage", "sens_cage", "/work/project/geronimo/WP1/Jonathan/final/plot/man_interaction_cage_sign.png")
+make_manhattan(don, "fdr_w", "sens_w", "/work/project/geronimo/WP1/Jonathan/final/plot/man_interaction_w_sign.png")
+make_manhattan(don, "fdr_interaction", "sens_interaction", "/work/project/geronimo/WP1/Jonathan/final/plot/man_interaction_interaction_sign.png")
+make_manhattan(don, "fdr_cage_70", "sens_cage_70", "/work/project/geronimo/WP1/Jonathan/final/plot/man_interaction_cage_70_sign.png")
+make_manhattan(don, "fdr_cage_90", "sens_cage_90", "/work/project/geronimo/WP1/Jonathan/final/plot/man_interaction_cage_90_sign.png")
 
 
-# 7. Annotation step
+#7. Custom annotate genome 
+gff <- import.gff3("/work/project/geronimo/WP1/Jonathan/useful/replaced_noquotes.gtf")
+gff_filtered <- gff[mcols(gff)$type %in% "gene"]
+
+plus_strand <- as.vector(strand(gff_filtered) == "+")
+start(gff_filtered)[plus_strand] <- start(gff_filtered)[plus_strand] - 2000
+
+minus_strand <- as.vector(strand(gff_filtered) == "-")
+end(gff_filtered)[minus_strand] <- end(gff_filtered)[minus_strand] + 2000
+
+# load CpGs
+chrom <- colsplit(DF_meth$rs, ':',c('chr','pos'))
+DF_meth2$pos <- colsplit(chrom$pos, '_',c('start','end'))$start
+DF_meth2$chr <- chrom$chr 
+
+DF_CPG <- DF_meth2 %>% select(c("chr", "pos")) %>% arrange(chr,pos)
+listCpGs <- GRanges(seqnames = DF_CPG$chr, ranges = IRanges(DF_CPG$pos, DF_CPG$pos))
+
+# find unique genes in CPG
+hit <- findOverlaps(listCpGs, gff_filtered)
+genes_with_cpg <- unique(subjectHits(hit))
+
+# find unique genes_id
+gff_filtered <- gff_filtered[genes_with_cpg]
+gene_name <- gff_filtered$gene_name
+
+
+# creation data frame of genome reference with GO and ENSEMBL ID 
+ensembl <- useMart("ensembl", dataset = "ggallus_gene_ensembl")
+genome_ref <- getBM(
+  attributes = c("ensembl_gene_id","go_id","external_gene_name","name_1006","namespace_1003"),
+  filters = "external_gene_name",
+  values = unique(gff$gene_name),
+  mart = ensembl
+)
+genome_ref <- genome_ref[genome_ref$namespace_1003 == "biological_process", ]
+colnames(genome_ref) <- c("ENSEMBL", "GO","NAME","FUNCTION","NAMESPACE")
+
+# 8. Annotation step
 
 
 # Load DML data to annotate
@@ -133,7 +171,7 @@ annotated_dml_promoter <- as_tibble(gr_dml[queryHits(hits_p)]) %>%
   mutate(gene_id = mcols(gff_filtered_2_promoter)$gene_id[subjectHits(hits_p)]) %>%
   filter(pval < 0.05)
 
-#8. GO Enrichment analysis
+# 9. GO Enrichment analysis
 
 # Prepare GO term tables
 gene2go <- genome_ref %>% select(GO, ENSEMBL)
@@ -159,7 +197,7 @@ ego_g <- enricher(
   pAdjustMethod = "BH"
 )
 
-# 9. Visualisation
+# 10. Visualisation
 
 # GO term dot plots
 dot_p <- dotplot(ego_p, showCategory = 10) + ggtitle("DML in promoter")
