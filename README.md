@@ -604,6 +604,6 @@ fwrite(DMR_multifactor_int_w, "path/to/your/working/directory/DSS/DMR_multifacto
 fwrite(DMR_multifactor_int_interaction, "path/to/your/working/directory/DSS/DMR_multifactor_int_interaction.txt", col.names = TRUE, row.names = FALSE, quote = FALSE, sep = "\t")
 ```
 ## 5. Enrichment
-**This part must be integrated into the [annotation viewer](script/visualization/DSS_visualization.r)**
+**This part must be integrated into the [DML annotation visualization](script/visualization/DSS_visualization.r), the script contains (not mandatory part: DML visualization) the creation of a reference genome, enrichment to prioritize genes and visualization of functional enrichment. The script requires a reference gff file from your organism. (warning: all paths in this script are my personal paths)**
 ## 6. Visualisation
 **Now you can performed a visualisation of the different step of this analyse by going on this [section](visualization/README.md).**
