@@ -1,3 +1,4 @@
+#Visualization part
 # 1. Load required packages 
 library(data.table)
 library(dplyr)
@@ -80,7 +81,7 @@ make_manhattan(don, "fdr_interaction", "sens_interaction", "/work/project/geroni
 make_manhattan(don, "fdr_cage_70", "sens_cage_70", "/work/project/geronimo/WP1/Jonathan/final/plot/man_interaction_cage_70_sign.png")
 make_manhattan(don, "fdr_cage_90", "sens_cage_90", "/work/project/geronimo/WP1/Jonathan/final/plot/man_interaction_cage_90_sign.png")
 
-
+# enrichment part
 #7. Custom annotate genome 
 gff <- import.gff3("/work/project/geronimo/WP1/Jonathan/useful/replaced_noquotes.gtf")
 gff_filtered <- gff[mcols(gff)$type %in% "gene"]
@@ -197,6 +198,7 @@ ego_g <- enricher(
   pAdjustMethod = "BH"
 )
 
+#Visualization part
 # 10. Visualisation
 
 # GO term dot plots
