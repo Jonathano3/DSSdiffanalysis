@@ -606,4 +606,4 @@ fwrite(DMR_multifactor_int_interaction, "path/to/your/working/directory/DSS/DMR_
 ## 5. Enrichment
 **This part must be integrated into the [annotation viewer](script/visualization/DSS_visualization.r)**
 ## 6. Visualisation
-**Now you can performed a visualisation of the different step of this analyse by going on this [section](visualization/README.md) **.
+**Now you can performed a visualisation of the different step of this analyse by going on this [section](visualization/README.md).**
