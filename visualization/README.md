@@ -49,7 +49,7 @@ Now that our data is clean, we can study it in more detail with this script: **[
 </p>
 
 ## DSS analysis
-Once you have obtained your DMLs, you can visualize them and their annotation with this script: **[DSS.r](../script/visualization/DSS_visualization.r)**
+Once you have obtained your DMLs, you can visualize, annotate and performed an enrichiment analysis with this script: **[DSS.r](../script/visualization/DSS_visualization.r)**
 
 <p align="center">
   <img src="../figure/DSS/man_70_main_sign_meth.png" width="32%" style="display: inline-block; margin: 0;">
