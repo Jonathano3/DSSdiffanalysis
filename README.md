@@ -12,6 +12,8 @@
 - [2. Pipeline for Data Processing](#2-pipeline-for-data-processing)
 - [3. Data Formatting and Statistics](#3-data-formating-and-statistics)
 - [4. Differential Analysis](#4-differential-analysis)
+- [5. Enrichment](#5-enrichment)
+- [6. Visualisation](#6-visualisation)
 
 ## 1. Setup your environnent
 **first download docker**
