@@ -5,6 +5,15 @@ Warning :
 * All scripts and visualizations to be shared are exclusively **tailor-made for the WP1_chicken_blood_novo** project data and my path.
 * All scripts are run locally
 
+**dowload the docker image to obtain all software and packages for the analysis**
+```sh
+docker pull jchalaye/dss:visualization
+```
+**run the container and change the path to your working directory**
+```sh
+docker run -it --rm -v "path/to/your/working/directory:/work" dss:visualization
+```
+
 ## Metadata analysis  
   
 First, a visualization of the raw data distribution is performed with this R script : **[metadata.r](../script/visualization/metadata.r)**
