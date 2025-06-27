@@ -5,8 +5,9 @@
     <img src="logo/geronimo.png" width="300" style="margin: 30px;">
     <img src="logo/genphyse.png" width="300" style="margin: 30px;">
 </p>
-##
-A full report on the analysis carried out with the github code was produced as part of my Master 2 internship and can be found ***[here](French_internship_report_CHALAYE_JONATHAN.pdf).***
+
+A full report on the analysis carried out with the github code was produced as part of my Master 2 internship and can be found ***[here](French_internship_report_CHALAYE_JONATHAN.pdf).***  
+  
 ## 📑 Table of Contents
 
 - [1. Environment Setup](#1-setup-your-environnent)
